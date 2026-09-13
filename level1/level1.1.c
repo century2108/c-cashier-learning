@@ -9,8 +9,17 @@ float price[3] ={3.50,0.50,6.00};
 char MC[20];//MC表输入的名称
 //int SZ=0;//SZ代表输入的数字
 //scanf("%d",&SZ)
-scanf("%s",MC);
+
 int i;
+while(1)
+{
+printf("Enter product name:\n tips:you can enter 'exit' or 'quit' to quit\n");//提示用户输入名称和如何关闭程序
+scanf("%s",MC);
+
+if(strcmp(MC,"exit")==0 || strcmp(MC,"quit")==0)
+{
+break;
+}
 
 for(i=0;i<3;i++)                                                       
 {
@@ -24,6 +33,7 @@ if(i == 3)
 {printf("ERROR :code not found\n");
 
 
+}
 }
 
     return 0;

@@ -16,7 +16,7 @@ for(i=0;i<3;i++)
 {
 //if(code[i]==SZ)
 if(strcmp(name[i],MC)==0)
-{printf("ok");
+{printf("code:%d\nprice:%.2f\n",code[i],price[i]);
 break;
 }
 };

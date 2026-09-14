@@ -49,6 +49,29 @@ if(strcmp(MC,"print")==0)
     printf("Total: %.2f\n", Total);
 
 }
+else if (strcmp(MC, "checkout") == 0)// checkout：打印小票，然后清空当前订单
+{
+    printf("Rceipt:\n");
+    printf("%-15s  %-15s  %-15s   %-15s\n", "Item", "Pri.", "Qty", "Amount");
+    printf("--------------------------------------------------\n");
+    double Total = 0.00;
+    for (int i = 0;i < 3;i++)
+    {
+        float item_sum = count[i] * price[i];
+        printf("%-15s  %-15d  %-15.2f  %-15d  %-15.2f\n", name[i], code[i], price[i], count[i], item_sum);
+
+
+        Total += item_sum;
+    }
+    printf("--------------------------------------------------\n");
+    printf("Total: %.2f\n", Total);
+    
+    for (int i = 0; i < 3; i++)// 结账完成，清空购物记录
+    {
+        count[i] = 0;
+    }
+    printf("结账完成\n");
+}
 int found=0;//found是一个标志变量，用于判断是否找到匹配的商品
 int delta;//delta是用户输入的购买数量
 char*endptr;//endptr是一个指针，用于指向字符串转换函数的结束位置

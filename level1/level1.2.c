@@ -14,7 +14,7 @@ char MC[20];//MC表输入的名称
 int i;
 while(1)
 {
-printf("Enter product name or code:\n (tips1:you can enter 'exit' or 'quit' to quit）\n（tips2:you can enter 'prices' to view all products）\n(tips3:product names are Cola, Lollipop, Noodles）\n");//提示用户输入名称或代码和如何关闭程序
+printf("Enter product name or code:\n (tips1:you can enter 'exit' or 'quit' to quit)\n(tips2:you can enter 'prices' to view all products)\n(tips3:product names are Cola, Lollipop, Noodles)\n");//提示用户输入名称或代码和如何关闭程序
 scanf("%s",MC);
 
 if(strcmp(MC,"exit")==0 || strcmp(MC,"quit")==0)
@@ -30,7 +30,7 @@ for(i=0;i<3;i++)
 printf("%-15s  %-15d  %-15.2f\n", name[i], code[i], price[i]);
   
 }
-break;
+continue;
 }
 if(strcmp(MC,"print")==0)
 {printf("Rceipt:\n");
@@ -47,7 +47,7 @@ if(strcmp(MC,"print")==0)
     }
     printf("--------------------------------------------------\n");
     printf("Total: %.2f\n", Total);
-
+continue;
 }
 else if (strcmp(MC, "checkout") == 0)// checkout：打印小票，然后清空当前订单
 {
@@ -71,7 +71,9 @@ else if (strcmp(MC, "checkout") == 0)// checkout：打印小票，然后清空�
         count[i] = 0;
     }
     printf("结账完成\n");
+    continue;
 }
+
 int found=0;//found是一个标志变量，用于判断是否找到匹配的商品
 int delta;//delta是用户输入的购买数量
 char*endptr;//endptr是一个指针，用于指向字符串转换函数的结束位置

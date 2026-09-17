@@ -54,6 +54,52 @@ int main()
             printf("Total: %.2f\n", Total);
             continue;
         }
+if(MC[0]=='s'&&MC[1]=='a'&&MC[2]=='l'&&MC[3]=='e'&&MC[4]=='s')
+{int chaxun=0;
+    if(MC[5]=='\0')
+{
+    chaxun=today_date;
+}
+else
+{
+sscanf(MC+5,"%d",&chaxun);
+}
+FILE*fp_read=fopen("sales.txt","r");
+if(fp_read==NULL)
+{printf("文件读取失败\n");
+continue;
+}
+char all[300];
+int read_date;
+int read_NO;
+int hh,mm,ss;
+char read_goods_counts[200];
+float read_Total;
+int found1=0;//用于判断是否搜寻到相关订单
+double daily=0;
+printf("Date;%d",chaxun);
+printf("%-15s  %-15s  %-15s   %-15s\n", "No.", "Time", "Items", "Amount");
+printf("-----------------------------------------------------------\n");
+printf("-----------------------------------------------------------\n");
+while(fgets(all,sizeof(all),fp_read)!=NULL)
+{int read_number=sscanf(all,"Date:%d No:%d Time:%d:%d:%d %199[^T] Total=%f",&read_date,&read_NO,&hh,&mm,&ss,read_goods_counts,&read_Total);
+    if(read_number==7&&read_date==chaxun)
+    {
+
+printf("%-15d  %02d:%02d:%02d  %-15s   %-15.2f\n",read_NO,hh,mm,ss,read_goods_counts,read_Total);
+daily+=read_Total;
+found1=1;
+    }
+}
+printf("-----------------------------------------------------------\n");
+printf("Daily:%.2f\n",daily);
+if(found1==0)
+{printf("NO records for day %d.\n",chaxun);
+
+}
+fclose(fp_read);
+continue;
+}
         else if (strcmp(MC, "checkout") == 0)// checkout：打印小票，然后清空当前订单
         {
             printf("Rceipt:\n");

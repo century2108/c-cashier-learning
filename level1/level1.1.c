@@ -13,7 +13,7 @@ char MC[20];//MC表输入的名称
 int i;
 while(1)
 {
-printf("Enter product name or code:\n (tips1:you can enter 'exit' or 'quit' to quit）\n（tips2:you can enter 'prices' to view all products）\n(tips3:product names are Cola, Lollipop, Noodles）\n");//提示用户输入名称或代码和如何关闭程序
+printf("Enter product name or code:\n (tips1:you can enter 'exit' or 'quit' to quit)\n(tips2:you can enter 'prices' to view all products)\n(tips3:product names are Cola, Lollipop, Noodles)\n");//提示用户输入名称或代码和如何关闭程序
 scanf("%s",MC);
 
 if(strcmp(MC,"exit")==0 || strcmp(MC,"quit")==0)

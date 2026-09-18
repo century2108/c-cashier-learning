@@ -100,6 +100,17 @@ if(found1==0)
 fclose(fp_read);
 continue;
 }
+ if(strcmp(MC,"newday")==0)
+{
+today_date++;
+serial_no=0;
+for (int i=0;i<3;i++)
+{
+count[i]=0;
+}
+printf("New day started.Today's sales records cleared");
+continue;
+}
         else if (strcmp(MC, "checkout") == 0)// checkout：打印小票，然后清空当前订单
         {
             printf("Rceipt:\n");

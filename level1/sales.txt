@@ -1,0 +1,8 @@
+Date:1 No:1 Time:15:09:12 Cola x1 Lollipop x1 Noodles x1 Total=10.00
+Date:1 No:2 Time:15:11:11 Cola x2 Lollipop x3 Noodles x1 Total=14.50
+Date:1 No:3 Time:15:11:29 Cola x1 Lollipop x2 Noodles x4 Total=28.50
+Date:1 No:1 Time:23:18:45 Cola x1 Lollipop x1 Total=4.00
+Date:1 No:2 Time:23:18:56 Cola x1 Lollipop x1 Noodles x1 Total=10.00
+Date:2 No:1 Time:23:19:46 Cola x1 Lollipop x1 Total=4.00
+Date:1 No:1 Time:23:27:11 Cola x1 Lollipop x1 Noodles x1 Total=10.00
+Date:1 No:2 Time:23:27:19 Cola x1 Lollipop x1 Noodles x1 Total=10.00

@@ -1,2 +1,3 @@
-# c-language-dian
-dian准备
+# c-cashier-learning
+收银系统项目
+

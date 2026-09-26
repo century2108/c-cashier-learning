@@ -400,14 +400,26 @@ int main()
                 fprintf(fp, "Total=%.2f\n", Total);
                 fclose(fp);
                 serial_no++;
+
+                int check_ok = 1; // check_ok标记：1代表校验通过，0代表有问题
                 for (i = 0; i < goods_num; i++)
                 {
-                    if (count[i] > 0)
+                    if (count[i] > stock[i])
                     {
-                        stock[i] = stock[i] - count[i];
+                        printf("ERROR：商品 %s 超出库存，无法结账\n", name[i]);
+                        check_ok = 0;
+                        break;
                     }
                 }
-                // 结账成功之后，新增这段扣库存代码
+
+                if (check_ok == 0)
+                {
+                    continue;
+                }
+                for (i = 0; i < goods_num; i++)
+                {
+                    stock[i] = stock[i] - count[i];
+                }
                 for (int i = 0; i < goods_num; i++) // 结账完成，清空购物记录
                 {
                     count[i] = 0;

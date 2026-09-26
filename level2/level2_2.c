@@ -12,7 +12,7 @@ int main()
     char code1[20][100] = {"1", "2", "3"}; // code1是code的字符串形式,后面用户既可输入名称也可输入编号查找相关信息
     float price[20] = {3.50, 0.50, 6.00};
     int count[20] = {0, 0, 0};       // count是每种商品的购买数量，初始为0
-    int kucun[20] = {100, 100, 100}; // kucun是每种商品的库存数量，初始为100个
+    int stock[20] = {100, 100, 100}; // stock是每种商品的库存数量，初始为100个
     int goods_num = 3;               // 商品种类数量，初始为3种，上限为20种
     char MC[20];                     // MC表输入的名称或代码，初始为空字符串
 
@@ -119,7 +119,7 @@ int main()
                 price[goods_num] = new_price;
                 count[goods_num] = 0;
                 sprintf(code1[goods_num], "%d", new_code); // code的代码同步给code1（字符串版本编号）
-                kucun[goods_num] = 100;                    // 新增商品库存数量初始为100个
+                stock[goods_num] = 100;                    // 新增商品库存数量初始为100个
                 goods_num++;
                 printf("%s(00%d) added.\n", new_name, new_code);
             }
@@ -157,7 +157,7 @@ int main()
                     strcpy(code1[i], code1[i + 1]);
                     price[i] = price[i + 1];
                     count[i] = count[i + 1];
-                    kucun[i] = kucun[i + 1]; // 后面所有商品的各个信息向前移动覆盖被删除项
+                    stock[i] = stock[i + 1]; // 后面所有商品的各个信息向前移动覆盖被删除项
                 }
                 goods_num--;
                 printf("%s(00%d) removed.\n", name[find_idx], code[find_idx]);
@@ -172,11 +172,11 @@ int main()
         {
             if (admin_mode == 1)
             {
-                printf("%-15s %-15s %-15s %-15s\n", "item", "code", "pri", "kucun");
+                printf("%-15s %-15s %-15s %-15s\n", "item", "code", "pri", "stock");
                 printf("--------------------------------------------------------------------------------------------------\n");
                 for (i = 0; i < goods_num; i++)
                 {
-                    printf("%-15s %-15d  %-15.2f %-15d\n", name[i], code[i], price[i], kucun[i]);
+                    printf("%-15s %-15d  %-15.2f %-15d\n", name[i], code[i], price[i], stock[i]);
                 }
                 continue;
             }
@@ -194,6 +194,80 @@ int main()
                 printf("ERROR: 你没有管理员权限\n");
             }
             continue;
+        }
+        if (strcmp(MC, "restock") == 0)
+        {
+            if (admin_mode == 1)
+            {
+                int target_code1; // target_code1：要进货的商品条码
+                int add_num;      // add_num：进货增加的数量
+                scanf("%d %d", &target_code1, &add_num);
+
+                int find = -1;
+                for (i = 0; i < goods_num; i++)
+                {
+                    if (code[i] == target_code1)
+                    {
+                        find = i;
+                        break;
+                    }
+                }
+                if (find == -1) // 找不到商品
+                {
+                    printf("ERROR：找不到该商品\n");
+                    continue;
+                }
+                if (add_num <= 0) // 进货数量必须>0
+                {
+                    printf("ERROR：进货数量必须大于0\n");
+                    continue;
+                }
+                stock[find] += add_num;
+                printf("进货成功，当前库存：%d\n", stock[find]);
+                continue;
+            }
+            else
+            {
+                printf("ERROR: 你没有管理员权限\n");
+                continue;
+            }
+        }
+        if (strcmp(MC, "setstock") == 0)
+        {
+            if (admin_mode == 1)
+            {
+                int target_code1;
+                int new_stock; // new_stock：目标库存值
+                scanf("%d %d", &target_code1, &new_stock);
+
+                int find = -1;
+                for (i = 0; i < goods_num; i++)
+                {
+                    if (code[i] == target_code1)
+                    {
+                        find = i;
+                        break;
+                    }
+                }
+                if (find == -1)
+                {
+                    printf("ERROR：找不到该商品\n");
+                    continue;
+                }
+                if (new_stock < 0)
+                {
+                    printf("ERROR：库存不能为负数\n");
+                    continue;
+                }
+                stock[find] = new_stock;
+                printf("盘点设置库存成功，当前库存：%d\n", stock[find]);
+                continue;
+            }
+            else
+            {
+                printf("ERROR: 你没有管理员权限\n");
+                continue;
+            }
         }
 
         if (strcmp(MC, "exit") == 0 || strcmp(MC, "quit") == 0)
@@ -330,7 +404,7 @@ int main()
                 {
                     if (count[i] > 0)
                     {
-                        kucun[i] = kucun[i] - count[i];
+                        stock[i] = stock[i] - count[i];
                     }
                 }
                 // 结账成功之后，新增这段扣库存代码

@@ -7,13 +7,13 @@ int admin_mode = 0;
 char admin_password[100] = "admin123";
 int main()
 {
-    char name[3][100] = {"Cola", "Lollipop", "Noodles"};
-    int code[3] = {1, 2, 3};
-    char code1[3][100] = {"1", "2", "3"}; // code1是code的字符串形式,后面用户既可输入名称也可输入编号查找相关信息
-    float price[3] = {3.50, 0.50, 6.00};
-    int count[3] = {0, 0, 0}; // count是每种商品的购买数量，初始为0
-
-    char MC[20]; // MC表输入的名称
+    char name[20][100] = {"Cola", "Lollipop", "Noodles"};
+    int code[20] = {1, 2, 3};
+    char code1[20][100] = {"1", "2", "3"}; // code1是code的字符串形式,后面用户既可输入名称也可输入编号查找相关信息
+    float price[20] = {3.50, 0.50, 6.00};
+    int count[20] = {0, 0, 0}; // count是每种商品的购买数量，初始为0
+    int goods_num = 3;         // 商品种类数量，初始为3种，上限为20种
+    char MC[20];               // MC表输入的名称
 
     int i;
     while (1)
@@ -22,6 +22,9 @@ int main()
         {
             printf("(tips1:可输入'setpassword+_+新密码'来修改密码)\n");
             printf("(tips2:可输入'back'返回用户模式)\n");
+            printf("(tips3:可输入'setprice+空格+商品编号+空格+新价格'设置商品价格)\n");
+            printf("(tips4:可输入'itemadd+空格+商品编号+空格+商品名称+空格+商品价格'添加商品)\n");
+            printf("(tips5:可输入'itemdel+空格+商品编号'删除商品)\n");
             printf("admin>");
         }
         else
@@ -75,7 +78,7 @@ int main()
                 scanf("%d %f", &target_code, &new_price);
 
                 int find_goods = 0;
-                for (i = 0; i < 3; i++)
+                for (i = 0; i < goods_num; i++)
                 {
                     if (code[i] == target_code)
                     {
@@ -89,6 +92,73 @@ int main()
                 {
                     printf("ERROR：没有这个商品编号\n");
                 }
+            }
+            else
+            {
+                printf("ERROR: 你没有管理员权限\n");
+            }
+            continue;
+        }
+        if (strcmp(MC, "itemadd") == 0)
+        {
+            if (admin_mode == 1)
+            {
+                if (goods_num >= 20)
+                {
+                    printf("ERROR：商品数量已满，无法新增\n");
+                    continue;
+                }
+                int new_code;
+                char new_name[100];
+                float new_price;
+                scanf("%d %s %f", &new_code, new_name, &new_price);
+
+                code[goods_num] = new_code;
+                strcpy(name[goods_num], new_name);
+                price[goods_num] = new_price;
+                count[goods_num] = 0;
+                sprintf(code1[goods_num], "%d", new_code); // code的代码同步给code1（字符串版本编号）
+
+                goods_num++;
+                printf("itemadd added.\n");
+            }
+            else
+            {
+                printf("ERROR: 你没有管理员权限\n");
+            }
+            continue;
+        }
+
+        if (strcmp(MC, "itemdel") == 0)
+        {
+            if (admin_mode == 1)
+            {
+                int del_code; // 要删除商品的编号
+                scanf("%d", &del_code);
+                int find_idx = -1; // 要删除商品的下标,初始为-1(任意小于0的整数，0以上为有效下标)
+                for (i = 0; i < goods_num; i++)
+                {
+                    if (code[i] == del_code)
+                    {
+                        find_idx = i;
+                        break;
+                    }
+                }
+                if (find_idx == -1)
+                {
+                    printf("ERROR：找不到该商品编号\n");
+                    continue;
+                }
+                for (i = find_idx; i < goods_num - 1; i++)
+                {
+                    strcpy(name[i], name[i + 1]);
+                    code[i] = code[i + 1];
+                    strcpy(code1[i], code1[i + 1]);
+                    price[i] = price[i + 1];
+                    count[i] = count[i + 1]; // 后面所有商品的各个信息向前移动覆盖被删除项
+                }
+                goods_num--;
+                printf("itemdel removed.\n");
             }
             else
             {
@@ -119,7 +189,7 @@ int main()
         {
             printf("%-15s  %-15s  %-15s\n", "name", "code", "price");
             printf("--------------------------------------------------\n"); // 不知道除了printf----还有没有更好的方法来打印表格，太慢了
-            for (i = 0; i < 3; i++)
+            for (i = 0; i < goods_num; i++)
             {
 
                 printf("%-15s  %-15d  %-15.2f\n", name[i], code[i], price[i]);
@@ -132,7 +202,7 @@ int main()
             printf("%-15s  %-15s  %-15s   %-15s\n", "Item", "Pri.", "Qty", "Amount");
             printf("--------------------------------------------------\n");
             double Total = 0.00;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < goods_num; i++)
             {
                 float item_sum = count[i] * price[i];
                 printf("%-15s  %-15d  %-15.2f  %-15d  %-15.2f\n", name[i], code[i], price[i], count[i], item_sum);
@@ -196,7 +266,7 @@ int main()
         {
             today_date++;
             serial_no = 0;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < goods_num; i++)
             {
                 count[i] = 0;
             }
@@ -209,7 +279,7 @@ int main()
             printf("%-15s  %-15s  %-15s   %-15s\n", "Item", "Pri.", "Qty", "Amount");
             printf("--------------------------------------------------\n");
             double Total = 0.00;
-            for (int i = 0; i < 3; i++)
+            for (int i = 0; i < goods_num; i++)
             {
                 float item_sum = count[i] * price[i];
                 printf("%-15s  %-15d  %-15.2f  %-15d  %-15.2f\n", name[i], code[i], price[i], count[i], item_sum);
@@ -231,7 +301,7 @@ int main()
                 fprintf(fp, "Date:%d No:%d Time:%02d:%02d:%02d ",
                         today_date, serial_no + 1, t->tm_hour, t->tm_min, t->tm_sec);
 
-                for (int i = 0; i < 3; i++)
+                for (int i = 0; i < goods_num; i++)
                 {
                     if (count[i] > 0)
                     {
@@ -242,7 +312,7 @@ int main()
                 fclose(fp);
                 serial_no++;
 
-                for (int i = 0; i < 3; i++) // 结账完成，清空购物记录
+                for (int i = 0; i < goods_num; i++) // 结账完成，清空购物记录
                 {
                     count[i] = 0;
                 }
@@ -264,7 +334,7 @@ int main()
             delta = 1;
             endptr = MC;
         }
-        for (i = 0; i < 3; i++)
+        for (i = 0; i < goods_num; i++)
         {
 
             if (strcmp(name[i], endptr) == 0 || strcmp(code1[i], endptr) == 0) // 前面输入name的endprt改为原来的MC也可以，因为MC和endptr指向同一个字符串，只是endptr可能会跳过负号

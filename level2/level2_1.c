@@ -66,6 +66,36 @@ int main()
             }
             continue;
         }
+        if (strcmp(MC, "setprice") == 0)
+        {
+            if (admin_mode == 1)
+            {
+                int target_code; // 需要修改价格的商品编号
+                float new_price; // 商品修改后的新价格
+                scanf("%d %f", &target_code, &new_price);
+
+                int find_goods = 0;
+                for (i = 0; i < 3; i++)
+                {
+                    if (code[i] == target_code)
+                    {
+                        price[i] = new_price;
+                        printf("Price updated.\n");
+                        find_goods = 1;
+                        break;
+                    }
+                }
+                if (find_goods == 0)
+                {
+                    printf("ERROR：没有这个商品编号\n");
+                }
+            }
+            else
+            {
+                printf("ERROR: 你没有管理员权限\n");
+            }
+            continue;
+        }
 
         if (strcmp(MC, "back") == 0)
         {

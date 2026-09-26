@@ -11,9 +11,10 @@ int main()
     int code[20] = {1, 2, 3};
     char code1[20][100] = {"1", "2", "3"}; // code1是code的字符串形式,后面用户既可输入名称也可输入编号查找相关信息
     float price[20] = {3.50, 0.50, 6.00};
-    int count[20] = {0, 0, 0}; // count是每种商品的购买数量，初始为0
-    int goods_num = 3;         // 商品种类数量，初始为3种，上限为20种
-    char MC[20];               // MC表输入的名称
+    int count[20] = {0, 0, 0};       // count是每种商品的购买数量，初始为0
+    int kucun[20] = {100, 100, 100}; // kucun是每种商品的库存数量，初始为100个
+    int goods_num = 3;               // 商品种类数量，初始为3种，上限为20种
+    char MC[20];                     // MC表输入的名称或代码，初始为空字符串
 
     int i;
     while (1)
@@ -25,14 +26,14 @@ int main()
             printf("(tips3:可输入'setprice+空格+商品编号+空格+新价格'设置商品价格)\n");
             printf("(tips4:可输入'itemadd+空格+商品编号+空格+商品名称+空格+商品价格'添加商品)\n");
             printf("(tips5:可输入'itemdel+空格+商品编号'删除商品)\n");
+            printf("(tips6:可输入'prices'查看所有商品详情)\n");
             printf("admin>");
         }
         else
         {
+            printf("(tips1:you can enter 'exit' or 'quit' to quit)\n(tips2:you can enter 'prices' to view all products)\n(tips3:product names are Cola, Lollipop, Noodles)\n"); // 提示用户输入名称或代码和如何关闭程序")
             printf(">");
-            printf("Enter product name or code:\n (tips1:you can enter 'exit' or 'quit' to quit)\n(tips2:you can enter 'prices' to view all products)\n(tips3:product names are Cola, Lollipop, Noodles)\n"); // 提示用户输入名称或代码和如何关闭程序
         }
-
         scanf("%s", MC);
         if (strcmp(MC, "admin") == 0)
         {
@@ -118,9 +119,9 @@ int main()
                 price[goods_num] = new_price;
                 count[goods_num] = 0;
                 sprintf(code1[goods_num], "%d", new_code); // code的代码同步给code1（字符串版本编号）
-
+                kucun[goods_num] = 100;                    // 新增商品库存数量初始为100个
                 goods_num++;
-                printf("itemadd added.\n");
+                printf("%s(00%d) added.\n", new_name, new_code);
             }
             else
             {
@@ -155,16 +156,30 @@ int main()
                     code[i] = code[i + 1];
                     strcpy(code1[i], code1[i + 1]);
                     price[i] = price[i + 1];
-                    count[i] = count[i + 1]; // 后面所有商品的各个信息向前移动覆盖被删除项
+                    count[i] = count[i + 1];
+                    kucun[i] = kucun[i + 1]; // 后面所有商品的各个信息向前移动覆盖被删除项
                 }
                 goods_num--;
-                printf("itemdel removed.\n");
+                printf("%s(00%d) removed.\n", name[find_idx], code[find_idx]);
             }
             else
             {
                 printf("ERROR: 你没有管理员权限\n");
             }
             continue;
+        }
+        if (strcmp(MC, "prices") == 0)
+        {
+            if (admin_mode == 1)
+            {
+                printf("%-15s %-15s %-15s %-15s\n", "item", "code", "pri", "kucun");
+                printf("--------------------------------------------------------------------------------------------------\n");
+                for (i = 0; i < goods_num; i++)
+                {
+                    printf("%-15s %-15d  %-15.2f %-15d\n", name[i], code[i], price[i], kucun[i]);
+                }
+                continue;
+            }
         }
 
         if (strcmp(MC, "back") == 0)
@@ -311,11 +326,19 @@ int main()
                 fprintf(fp, "Total=%.2f\n", Total);
                 fclose(fp);
                 serial_no++;
-
+                for (i = 0; i < goods_num; i++)
+                {
+                    if (count[i] > 0)
+                    {
+                        kucun[i] = kucun[i] - count[i];
+                    }
+                }
+                // 结账成功之后，新增这段扣库存代码
                 for (int i = 0; i < goods_num; i++) // 结账完成，清空购物记录
                 {
                     count[i] = 0;
                 }
+
                 printf("结账完成\n");
                 continue;
             }
